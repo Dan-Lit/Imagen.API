@@ -15,22 +15,17 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Devuelve una lista de fotos según los criterios especificados
-        /// </summary>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "photo1", "photo2", "etc"};
-        }
-        /// <summary>
         /// Obtiene una única foto, según su id. 
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>Imagen solicitada </returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Get(string id) 
         {
-            return "foto con id especificado";
+            string path = _imageService.GetImage(id);
+            Byte[] b = System.IO.File.ReadAllBytes(path);
+            return File(b, "image/png");
         }
 
         /// <summary>
@@ -41,14 +36,15 @@ namespace Imagen.API.Controllers
 
         
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         ///<summary>
         ///Publica una única foto. 
         /// </summary>
-        public async Task<string> Put(IFormFile file)
+        public async Task<string> Put(IFormFile file) 
         {
             return await _imageService.PutImage(file);
         }
-
+        //Devuelve una lista de fotos según los criterios especificados
         // public async void PutBatch(List<IFormFile> files) { }
 
         /// <summary>
@@ -56,8 +52,10 @@ namespace Imagen.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<int> Delete(string id) //Task<IActionResult>
         {
+            return await _imageService.DeleteImage(id);
         }
     }
 }

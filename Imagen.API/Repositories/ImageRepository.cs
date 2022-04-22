@@ -47,5 +47,23 @@ namespace Imagen.API.Repositories
             
             return Image.ImageId;
         }
+
+        public string GetImage(string id)
+        {
+            var image = _dbContext.Image.Find(id);
+            return image.ImageUrl;
+
+    }
+
+        public async Task<int> DeleteImage(string id)
+        {
+            var Image = new Image()
+            {
+                ImageId = id,
+            };
+            _dbContext.Attach(Image);
+           _dbContext.Image.Remove(Image);
+           return await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Imagen.DAL.Models
         public bool? Processed { get; set; }
         public int? UserId { get; set; }
 
-        public virtual Usuario User { get; set; }
-        public virtual ICollection<Imagetagconfig> Imagetagconfig { get; set; }
+        public virtual Usuario? User { get; set; }
+        public virtual ICollection<Imagetagconfig>? Imagetagconfig { get; set; }
     }
 }

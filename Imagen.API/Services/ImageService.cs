@@ -29,5 +29,15 @@ namespace Imagen.API.Services
                 return false;
             else return true;
         }
+
+        public string GetImage(string id)
+        {
+            return _imageRepository.GetImage(id);
+        }
+
+        public async Task<int> DeleteImage(string id)
+        {
+            return await _imageRepository.DeleteImage(id);
+        }
     }
 }
