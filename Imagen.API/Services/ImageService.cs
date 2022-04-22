@@ -11,9 +11,23 @@ namespace Imagen.API.Services
             _imageRepository = imageRepository;
         }
         //<ImageResponse>
-        public async Task PostImage(ImageRequest imageRequest)
+        public async Task<string> PutImage(IFormFile file)
         {
-            var image = await _imageRepository.PostImage(imageRequest);
+           if (!ValidateFile(file))
+            {
+                throw new Exception ("File extension not permitted.");
+            }
+
+            return await _imageRepository.PostImage(file);
+        }
+
+        private bool ValidateFile (IFormFile file)
+        {
+            var supportedTypes = new[] { "jpg", "png" };
+            var fileExtension = Path.GetExtension(file.FileName).Substring(1);
+            if (!supportedTypes.Contains(fileExtension)) 
+                return false;
+            else return true;
         }
     }
 }

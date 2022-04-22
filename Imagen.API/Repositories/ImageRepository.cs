@@ -1,4 +1,7 @@
-﻿using Imagen.API.Models;
+﻿
+using Imagen.DAL;
+using Imagen.DAL.Context;
+using Imagen.DAL.Models;
 using System;
 
 namespace Imagen.API.Repositories
@@ -12,15 +15,37 @@ namespace Imagen.API.Repositories
             _dbContext = serverDbContext;
         }
 
-        public void PostImage(ImageRequest imageRequest)
+        public async Task<string> PostImage(IFormFile file)
         {
-        }
+            string id = Guid.NewGuid().ToString();
+            string path = @"C:\images\" + id+".jpg";
+            //File.Copy(id, path);
+            try { 
+            //string uploads = Path.Combine(_environment.WebRootPath, "uploads");
+            // string filePath = Path.Combine(uploads, file.FileName);
+            Stream fileStream = new FileStream(path, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+            } catch (Exception ex) 
+            {
+            }
 
-        public void test()
-        {
-            //do things here. you can access DAL to work with those models. Then: add and save
-            //_dbContext.Add(...);
-            _dbContext.SaveChangesAsync();
+            
+            
+            var Image = new Image()
+            {
+                ImageId = id,
+                ImageUrl = path,
+            };
+            int l = id.Length;
+            try
+            {
+                _dbContext.Image.Add(Image);
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e)
+            {
+            }
+            
+            return Image.ImageId;
         }
     }
 }

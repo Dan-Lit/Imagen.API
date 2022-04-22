@@ -1,4 +1,5 @@
 ﻿using Imagen.API.Models;
+using Imagen.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imagen.API.Controllers
@@ -7,6 +8,11 @@ namespace Imagen.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly ImageService _imageService;
+        public ImagesController(ImageService imageService)
+        {
+            _imageService = imageService;
+        }
 
         /// <summary>
         /// Devuelve una lista de fotos según los criterios especificados
@@ -32,13 +38,18 @@ namespace Imagen.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="value"></param>
-        [HttpPut("{id}")]
-        public async void Put(int id, [FromBody] ImageRequest imageRequest)
-        {
-            var imageResponse = await _imageService.PutImage(imageRequest);
 
-            return Ok(imageResponse);
+        
+        [HttpPut]
+        ///<summary>
+        ///Publica una única foto. 
+        /// </summary>
+        public async Task<string> Put(IFormFile file)
+        {
+            return await _imageService.PutImage(file);
         }
+
+        // public async void PutBatch(List<IFormFile> files) { }
 
         /// <summary>
         /// Borra una foto según su id. 
