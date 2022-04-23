@@ -48,11 +48,16 @@ namespace Imagen.API.Repositories
             return Image.ImageId;
         }
 
-        public string GetImage(string id)
+        public List<Image> GetUntaggedImages()
+        {
+            return _dbContext.Image.Where(p => p.Tagged == false).ToList();
+        }
+
+        public Image GetImage(string id)
         {
             var image = _dbContext.Image.Find(id);
-            return image.ImageUrl;
-
+            if (image == null) throw new Exception("Imagen no existe"); //TODO: message exception
+            return image;
     }
 
         public async Task<int> DeleteImage(string id)

@@ -1,5 +1,6 @@
 ﻿using Imagen.API.Models;
 using Imagen.API.Services;
+using Imagen.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imagen.API.Controllers
@@ -21,9 +22,9 @@ namespace Imagen.API.Controllers
         /// <returns>Imagen solicitada </returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Get(string id) 
+        public IActionResult GetImage(string id) 
         {
-            string path = _imageService.GetImage(id);
+            string path = _imageService.GetImage(id).ImageUrl;
             Byte[] b = System.IO.File.ReadAllBytes(path);
             return File(b, "image/png");
         }
@@ -40,7 +41,7 @@ namespace Imagen.API.Controllers
         ///<summary>
         ///Publica una única foto. 
         /// </summary>
-        public async Task<string> Put(IFormFile file) 
+        public async Task<string> PutImage(IFormFile file) 
         {
             return await _imageService.PutImage(file);
         }
@@ -53,9 +54,22 @@ namespace Imagen.API.Controllers
         /// <param name="id"></param>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<int> Delete(string id) //Task<IActionResult>
+        public async Task<IActionResult> DeleteImage(string id)
         {
-            return await _imageService.DeleteImage(id);
+            await _imageService.DeleteImage(id);
+            return Ok(); 
+        }
+
+        /// <summary>
+        /// Devuelve las imágenes que no tienen ningún tag asignado. 
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpGet]
+        public List<Image> GetUntaggedImages()
+        {
+             return _imageService.GetUntaggedImages();
         }
     }
 }

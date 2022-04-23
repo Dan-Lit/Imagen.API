@@ -1,5 +1,6 @@
 ﻿using Imagen.API.Models;
 using Imagen.API.Repositories;
+using Imagen.DAL.Models;
 
 namespace Imagen.API.Services
 {
@@ -30,7 +31,7 @@ namespace Imagen.API.Services
             else return true;
         }
 
-        public string GetImage(string id)
+        public Image GetImage(string id)
         {
             return _imageRepository.GetImage(id);
         }
@@ -38,6 +39,13 @@ namespace Imagen.API.Services
         public async Task<int> DeleteImage(string id)
         {
             return await _imageRepository.DeleteImage(id);
+        }
+
+        public List<Image> GetUntaggedImages()
+        {
+            var untaggedImages = _imageRepository.GetUntaggedImages();
+            if (untaggedImages == null) throw new Exception("204 exception"); //TODO: Exception
+            return untaggedImages;
         }
     }
 }
