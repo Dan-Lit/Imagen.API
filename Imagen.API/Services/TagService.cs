@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Imagen.API.Models;
 using Imagen.API.Repositories;
 
 
@@ -26,13 +27,21 @@ namespace Imagen.API.Services
 
         public async Task AssignTag(string imageId, string tagName)
         {
-            var Image = _imageRepository.GetImage(imageId);
-            if (Image == null) throw new Exception(); //TODO: Message exception
+            var image = _imageRepository.GetImage(imageId);
+            if (image == null) throw new Exception(); //TODO: Message exception
 
             var tagList = _tagRepository.GetAllTags().Where(p => p.Equals(tagName));
             if (tagList == null) throw new Exception(); //TODO: Message exception
 
-            await _tagRepository.AssignTag(Image, tagName);
+            await _tagRepository.AssignTag(image, tagName);
+        }
+
+        public async Task BatchTagging(AssignTagsRequest request)
+        {
+            foreach (var r in request.Tags)
+            {
+                await AssignTag(r.Key, r.Value);
+            }
         }
     }
 }

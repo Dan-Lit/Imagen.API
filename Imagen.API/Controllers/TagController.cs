@@ -1,4 +1,5 @@
-﻿using Imagen.API.Services;
+﻿using Imagen.API.Models;
+using Imagen.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imagen.API.Controllers
@@ -40,5 +41,18 @@ namespace Imagen.API.Controllers
             await _tagService.AssignTag(imageId, tagName);
             return Ok();
         }
+
+        /// <summary>
+        /// Asigna tag a varias imágenes. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// 
+        [HttpPost("BatchTagging")]
+        public IActionResult BatchTagging(AssignTagsRequest request)
+        {
+            _tagService.BatchTagging(request); 
+            return Ok();
+        }
+
     }
 }

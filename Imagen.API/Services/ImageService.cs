@@ -1,6 +1,7 @@
 ﻿using Imagen.API.Models;
 using Imagen.API.Repositories;
 using Imagen.DAL.Models;
+using System.IO.Compression;
 
 namespace Imagen.API.Services
 {
@@ -33,7 +34,9 @@ namespace Imagen.API.Services
 
         public Image GetImage(string id)
         {
-            return _imageRepository.GetImage(id);
+            var image = _imageRepository.GetImage(id);
+            if (image == null) throw new Exception("Imagen no existe"); //TODO: message exception
+            return image;
         }
 
         public async Task<int> DeleteImage(string id)
@@ -46,6 +49,36 @@ namespace Imagen.API.Services
             var untaggedImages = _imageRepository.GetUntaggedImages();
             if (untaggedImages == null) throw new Exception("204 exception"); //TODO: Exception
             return untaggedImages;
+        }
+
+        public string GetAllImages()
+        {
+            string destFileName = @"C:\images\zips\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm");
+
+            if (!Directory.Exists(destFileName))
+            {
+                Directory.CreateDirectory(destFileName);
+            }
+
+            var allImages = _imageRepository.GetAllImages();
+
+            foreach (var image in allImages)
+            {
+                string newPath = destFileName + @"\" + image.ImageId + ".jpg";
+                File.Copy(image.ImageUrl, newPath);
+            }
+
+            //Creación del zip
+            string zipPath = destFileName + @"\zip.zip";
+            try
+            {
+                ZipFile.CreateFromDirectory(destFileName, zipPath);
+            }
+            catch (Exception ex)
+            {
+            }
+        
+            return zipPath;
         }
     }
 }

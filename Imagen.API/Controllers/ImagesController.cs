@@ -22,26 +22,19 @@ namespace Imagen.API.Controllers
         /// <returns>Imagen solicitada </returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetImage(string id) 
+        public IActionResult GetImage(string id)
         {
             string path = _imageService.GetImage(id).ImageUrl;
             Byte[] b = System.IO.File.ReadAllBytes(path);
             return File(b, "image/png");
         }
 
-        /// <summary>
-        /// Sube una imagen.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-
-        
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         ///<summary>
         ///Publica una única foto. 
         /// </summary>
-        public async Task<string> PutImage(IFormFile file) 
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> PutImage(IFormFile file)
         {
             return await _imageService.PutImage(file);
         }
@@ -57,7 +50,7 @@ namespace Imagen.API.Controllers
         public async Task<IActionResult> DeleteImage(string id)
         {
             await _imageService.DeleteImage(id);
-            return Ok(); 
+            return Ok();
         }
 
         /// <summary>
@@ -69,7 +62,20 @@ namespace Imagen.API.Controllers
         [HttpGet]
         public List<Image> GetUntaggedImages()
         {
-             return _imageService.GetUntaggedImages();
+            return _imageService.GetUntaggedImages();
+        }
+
+        /// <summary>
+        /// Devuelve todas las imágenes. 
+        /// </summary>
+        /// <returns>Archivo .zip</returns>
+
+        [HttpPost("GetAll")]
+        public IActionResult GetAllImages()
+        {
+             var path = _imageService.GetAllImages();
+            Byte[] b = System.IO.File.ReadAllBytes(path);
+            return File(b, "application/zip");
         }
     }
 }

@@ -56,9 +56,13 @@ namespace Imagen.API.Repositories
         public Image GetImage(string id)
         {
             var image = _dbContext.Image.Find(id);
-            if (image == null) throw new Exception("Imagen no existe"); //TODO: message exception
             return image;
     }
+
+        public List<Image> GetAllImages()
+        {
+            return _dbContext.Image.ToList();
+        }
 
         public async Task<int> DeleteImage(string id)
         {
