@@ -38,8 +38,6 @@ namespace Imagen.API.Controllers
         {
             return await _imageService.PutImage(file);
         }
-        //Devuelve una lista de fotos según los criterios especificados
-        // public async void PutBatch(List<IFormFile> files) { }
 
         /// <summary>
         /// Borra una foto según su id. 
@@ -60,9 +58,12 @@ namespace Imagen.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet]
-        public List<Image> GetUntaggedImages()
+        public IActionResult GetUntaggedImages()
         {
-            return _imageService.GetUntaggedImages();
+            var path = _imageService.GetUntaggedImages();
+            Byte[] b = System.IO.File.ReadAllBytes(path);
+            //return File(b, "application/zip");
+            return File(b, "application/octet-stream");
         }
 
         /// <summary>
@@ -75,7 +76,8 @@ namespace Imagen.API.Controllers
         {
              var path = _imageService.GetAllImages();
             Byte[] b = System.IO.File.ReadAllBytes(path);
-            return File(b, "application/zip");
+            //return File(b, "application/zip");
+            return File(b, "application/octet-stream");
         }
     }
 }
