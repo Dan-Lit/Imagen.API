@@ -48,12 +48,21 @@ namespace Imagen.API.Repositories
             return Image.ImageId;
         }
 
-        public string GetImage(string id)
+        public List<Image> GetUntaggedImages()
+        {
+            return _dbContext.Image.Where(p => p.Tagged == false).ToList();
+        }
+
+        public Image GetImage(string id)
         {
             var image = _dbContext.Image.Find(id);
-            return image.ImageUrl;
-
+            return image;
     }
+
+        public List<Image> GetAllImages()
+        {
+            return _dbContext.Image.ToList();
+        }
 
         public async Task<int> DeleteImage(string id)
         {
