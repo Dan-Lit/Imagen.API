@@ -17,7 +17,7 @@ namespace Imagen.API.Services
         {
            if (!ValidateFile(file))
             {
-                throw new Exception ("File extension not permitted.");
+                throw new Exception ("File extension not permitted."); //TODO: excepción
             }
 
             return await _imageRepository.PostImage(file);
@@ -44,24 +44,31 @@ namespace Imagen.API.Services
             return await _imageRepository.DeleteImage(id);
         }
 
-        public List<Image> GetUntaggedImages()
+        public string GetUntaggedImages()
         {
             var untaggedImages = _imageRepository.GetUntaggedImages();
             if (untaggedImages == null) throw new Exception("204 exception"); //TODO: Exception
-            return untaggedImages;
+
+            return BuildZip(untaggedImages);
         }
 
         public string GetAllImages()
         {
-            string destFileName = @"C:\images\zips\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm");
+            var allImages = _imageRepository.GetAllImages();
 
+            return BuildZip(allImages);
+        }
+
+        private string BuildZip(List<Image> allImages)
+        {
+            //Creamos la carpeta donde se creará el zip
+            string destFileName = @"C:\images\zips\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm");
             if (!Directory.Exists(destFileName))
             {
                 Directory.CreateDirectory(destFileName);
             }
 
-            var allImages = _imageRepository.GetAllImages();
-
+            //Llevamos las imágenes a la carpeta
             foreach (var image in allImages)
             {
                 string newPath = destFileName + @"\" + image.ImageId + ".jpg";
@@ -74,10 +81,8 @@ namespace Imagen.API.Services
             {
                 ZipFile.CreateFromDirectory(destFileName, zipPath);
             }
-            catch (Exception ex)
-            {
-            }
-        
+            catch (Exception ex) { }
+
             return zipPath;
         }
     }
