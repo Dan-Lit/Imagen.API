@@ -103,7 +103,7 @@ namespace Imagen.API.Controllers
         [HttpGet("GetAllZip")]
         public IActionResult GetAllImagesZip()
         {
-            var path = _imageService.GetAllImages();
+            var path = _imageService.GetAllImagesZip();
             Byte[] b = System.IO.File.ReadAllBytes(path);
             //return File(b, "application/zip");
             return File(b, "application/octet-stream");
@@ -121,5 +121,19 @@ namespace Imagen.API.Controllers
 
             return Ok(images);
         }
+
+        /// <summary>
+        /// Obtiene todas las imágenes por URL
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAll/url")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Image))]
+        public IActionResult GetAllImagesByURL()
+        {
+            var images = _imageService.GetAllImagesByURL();
+
+            return Ok(images);
+        }
+
     }
 }
