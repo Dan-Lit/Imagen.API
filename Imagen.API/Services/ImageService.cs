@@ -2,6 +2,7 @@
 using Imagen.API.Repositories;
 using Imagen.DAL.Models;
 using System.IO.Compression;
+using System.Text;
 
 namespace Imagen.API.Services
 {
@@ -23,6 +24,17 @@ namespace Imagen.API.Services
             return await _imageRepository.PostImage(file);
         }
 
+        public async Task PutImages(List<IFormFile> files)
+        {
+            if (!ValidateFiles(files))
+            {
+                throw new Exception("At least one file extension is not permitted."); //TODO: excepción
+            }
+
+            await _imageRepository.PostImages(files);
+        }
+
+
         private bool ValidateFile (IFormFile file)
         {
             var supportedTypes = new[] { "jpg", "png" };
@@ -30,6 +42,18 @@ namespace Imagen.API.Services
             if (!supportedTypes.Contains(fileExtension)) 
                 return false;
             else return true;
+        }
+
+        private bool ValidateFiles(List<IFormFile> files)
+        {
+            var supportedTypes = new[] { "jpg", "png" };
+            foreach (var file in files)
+            {
+                var fileExtension = Path.GetExtension(file.FileName).Substring(1);
+                if (!supportedTypes.Contains(fileExtension))
+                    return false;
+            }
+            return true;
         }
 
         public Image GetImage(string id)
@@ -57,6 +81,35 @@ namespace Imagen.API.Services
             var allImages = _imageRepository.GetAllImages();
 
             return BuildZip(allImages);
+            //return ImagesToFormData(allImages);
+        }
+
+        public ImageResponse ConvertImagesToBase64()
+        {
+            var allImages = _imageRepository.GetAllImages();
+            var imageResponse= new ImageResponse();
+            imageResponse.CodedImages = new List<SingleImage>();
+
+            foreach (var image in allImages)
+            {
+                var singleImage = new SingleImage();
+                byte[] imageByte = Encoding.ASCII.GetBytes(Convert.ToBase64String(File.ReadAllBytes(image.ImageUrl)));
+
+                singleImage.ImageId = image.ImageId;
+                singleImage.Base64 = imageByte;
+                
+                imageResponse.CodedImages.Add(singleImage);
+            }
+            return imageResponse;
+        }
+
+        public byte[] ConvertSingleImageToBase64(string id)
+        {
+            var image = _imageRepository.GetImage(id);
+
+            byte[] imageByte = Encoding.ASCII.GetBytes(Convert.ToBase64String(File.ReadAllBytes(image.ImageUrl)));
+
+            return imageByte;
         }
 
         private string BuildZip(List<Image> allImages)

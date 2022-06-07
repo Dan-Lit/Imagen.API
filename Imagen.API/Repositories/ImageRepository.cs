@@ -18,25 +18,20 @@ namespace Imagen.API.Repositories
         public async Task<string> PostImage(IFormFile file)
         {
             string id = Guid.NewGuid().ToString();
-            string path = @"C:\images\" + id+".jpg";
-            //File.Copy(id, path);
+            string path = @"C:\images\" + id + ".jpg";
             try { 
-            //string uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            // string filePath = Path.Combine(uploads, file.FileName);
             Stream fileStream = new FileStream(path, FileMode.Create);
             await file.CopyToAsync(fileStream);
             } catch (Exception ex) 
             {
             }
-
-            
-            
+         
             var Image = new Image()
             {
                 ImageId = id,
                 ImageUrl = path,
             };
-            int l = id.Length;
+
             try
             {
                 _dbContext.Image.Add(Image);
@@ -46,6 +41,39 @@ namespace Imagen.API.Repositories
             }
             
             return Image.ImageId;
+        }
+
+        public async Task PostImages(List<IFormFile> files)
+        {
+            foreach (var file in files)
+            {
+                string id = Guid.NewGuid().ToString();
+                string path = @"C:\images\" + id + ".jpg";
+                try
+                {
+                    Stream fileStream = new FileStream(path, FileMode.Create);
+                    await file.CopyToAsync(fileStream);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                var Image = new Image()
+                {
+                    ImageId = id,
+                    ImageUrl = path,
+                };
+
+                try
+                {
+                    _dbContext.Image.Add(Image);
+                }
+                catch (Exception e)
+                {
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public List<Image> GetUntaggedImages()

@@ -2,6 +2,7 @@
 using Imagen.API.Services;
 using Imagen.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace Imagen.API.Controllers
 {
@@ -29,6 +30,20 @@ namespace Imagen.API.Controllers
             return File(b, "image/png");
         }
 
+        /// <summary>
+        /// Obtiene una única foto en base64, según su id. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Imagen solicitada </returns>
+        [HttpGet("{id}/blob")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetBase64Image(string id)
+        {
+            var images = _imageService.ConvertSingleImageToBase64(id);
+
+            return Ok(images);
+        }
+
         ///<summary>
         ///Publica una única foto. 
         /// </summary>
@@ -37,6 +52,20 @@ namespace Imagen.API.Controllers
         public async Task<string> PutImage(IFormFile file)
         {
             return await _imageService.PutImage(file);
+        }
+
+        /// <summary>
+        /// Publica varias fotos.
+        /// Para programadores: el nombre de los valores de FormData debe ser 'files'.
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        [HttpPut("several")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> PutImages(List<IFormFile> files)
+        {
+            await _imageService.PutImages(files);
+            return Ok();
         }
 
         /// <summary>
@@ -66,18 +95,31 @@ namespace Imagen.API.Controllers
             return File(b, "application/octet-stream");
         }
 
-        /// <summary>
-        /// Devuelve todas las imágenes. 
+        ///// <summary>
+        /// Devuelve todas las imágenes en .zip. 
         /// </summary>
         /// <returns>Archivo .zip</returns>
 
-        [HttpPost("GetAll")]
-        public IActionResult GetAllImages()
+        [HttpGet("GetAllZip")]
+        public IActionResult GetAllImagesZip()
         {
-             var path = _imageService.GetAllImages();
+            var path = _imageService.GetAllImages();
             Byte[] b = System.IO.File.ReadAllBytes(path);
             //return File(b, "application/zip");
             return File(b, "application/octet-stream");
+        }
+
+        /// <summary>
+        /// Obtiene todas las imágenes en Blob64
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageResponse))]
+        public IActionResult GetAllImages()
+        {
+          var images = _imageService.ConvertImagesToBase64();
+
+            return Ok(images);
         }
     }
 }
