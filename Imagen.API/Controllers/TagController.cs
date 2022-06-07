@@ -33,7 +33,7 @@ namespace Imagen.API.Controllers
         /// <param name="imageId"></param>
         /// <param name="tagName"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet("{imageId}/{tagName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignTag(string imageId, string tagName)

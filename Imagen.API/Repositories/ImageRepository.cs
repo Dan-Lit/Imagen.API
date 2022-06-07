@@ -19,6 +19,7 @@ namespace Imagen.API.Repositories
         {
             string id = Guid.NewGuid().ToString();
             string path = @"C:\images\" + id + ".jpg";
+            path = @"C:\Users\danie\source\repos\front-app-image\src\assets\database\" + id + ".jpg";
             try { 
             Stream fileStream = new FileStream(path, FileMode.Create);
             await file.CopyToAsync(fileStream);
@@ -49,6 +50,7 @@ namespace Imagen.API.Repositories
             {
                 string id = Guid.NewGuid().ToString();
                 string path = @"C:\images\" + id + ".jpg";
+                path = @"C:\Users\danie\source\repos\front-app-image\src\assets\database\" + id + ".jpg";
                 try
                 {
                     Stream fileStream = new FileStream(path, FileMode.Create);
@@ -102,5 +104,13 @@ namespace Imagen.API.Repositories
            _dbContext.Image.Remove(Image);
            return await _dbContext.SaveChangesAsync();
         }
+
+        public List<Imagetagconfig> GetImageTags(string id)
+        {
+            var imageTagConfig = _dbContext.Imagetagconfig.Where(p => p.ImageId == id).ToList();
+            return imageTagConfig;
+        }
+
+
     }
 }

@@ -76,12 +76,17 @@ namespace Imagen.API.Services
             return BuildZip(untaggedImages);
         }
 
-        public string GetAllImages()
+        public string GetAllImagesZip()
         {
             var allImages = _imageRepository.GetAllImages();
 
             return BuildZip(allImages);
             //return ImagesToFormData(allImages);
+        }
+
+        public List<Image> GetAllImagesByURL()
+        {
+            return _imageRepository.GetAllImages();
         }
 
         public ImageResponse ConvertImagesToBase64()
@@ -137,6 +142,11 @@ namespace Imagen.API.Services
             catch (Exception ex) { }
 
             return zipPath;
+        }
+
+        public List<Imagetagconfig> GetImageTags(string id)
+        {
+            return _imageRepository.GetImageTags(id);
         }
     }
 }
