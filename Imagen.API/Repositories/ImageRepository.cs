@@ -104,5 +104,13 @@ namespace Imagen.API.Repositories
            _dbContext.Image.Remove(Image);
            return await _dbContext.SaveChangesAsync();
         }
+
+        public List<Imagetagconfig> GetImageTags(string id)
+        {
+            var imageTagConfig = _dbContext.Imagetagconfig.Where(p => p.ImageId == id).ToList();
+            return imageTagConfig;
+        }
+
+
     }
 }

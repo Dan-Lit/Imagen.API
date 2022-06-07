@@ -19,8 +19,8 @@ namespace Imagen.API.Services
 
         public async Task CreateTag(string tagName)
         {
-            var tag = _tagRepository.GetAllTags().Where(p => p.Equals(tagName));
-            if (tag != null) throw new Exception("El tag ya existe"); //TODO: Message exception 
+            var tag = _tagRepository.GetAllTags().Where(p => p.Equals(tagName)).ToList();
+            if (tag.Count>0) throw new Exception("El tag ya existe"); //TODO: Message exception 
 
             await _tagRepository.CreateTag(tagName);
         }

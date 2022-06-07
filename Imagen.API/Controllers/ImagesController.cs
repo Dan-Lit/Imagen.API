@@ -135,5 +135,17 @@ namespace Imagen.API.Controllers
             return Ok(images);
         }
 
+
+        /// <summary>
+        /// Obtiene los tags asociados a una imagen
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getTags/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetImageTags(string id)
+        {
+            var tag = _imageService.GetImageTags(id);
+            return Ok(tag);
+        }
     }
 }

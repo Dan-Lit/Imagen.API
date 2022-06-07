@@ -143,5 +143,10 @@ namespace Imagen.API.Services
 
             return zipPath;
         }
+
+        public List<Imagetagconfig> GetImageTags(string id)
+        {
+            return _imageRepository.GetImageTags(id);
+        }
     }
 }
