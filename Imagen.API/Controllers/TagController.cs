@@ -19,12 +19,25 @@ namespace Imagen.API.Controllers
         /// </summary>
         /// <param name="tagName"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpGet("{tagName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateTag(string tagName)
         {
             await _tagService.CreateTag(tagName);
             return Ok();
+        }
+
+        /// <summary>
+        /// Crea un nuevo tag. 
+        /// </summary>
+        /// <param name="tagName"></param>
+        /// <returns></returns>
+        [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllTags()
+        {
+            var tags = _tagService.GetAllTags();
+            return Ok(tags);
         }
 
         /// <summary>

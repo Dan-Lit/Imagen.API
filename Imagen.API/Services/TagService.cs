@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Imagen.API.Models;
 using Imagen.API.Repositories;
-
+using Imagen.DAL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Imagen.API.Services
 {
@@ -34,6 +35,11 @@ namespace Imagen.API.Services
             if (tagList == null) throw new Exception("El tag no existe"); //TODO: Message exception
 
             await _tagRepository.AssignTag(image, tagName);
+        }
+
+        public List<Tag> GetAllTags()
+        {
+            return _tagRepository.GetAllTags();
         }
 
         public async Task BatchTagging(AssignTagsRequest request)
