@@ -41,6 +41,18 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
+        /// Obtén la relación entre tags e imágenes 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("imagetagconfig")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllImageTagConfig()
+        {
+            var tags = _tagService.GetAllImageTagConfig();
+            return Ok(tags);
+        }
+
+        /// <summary>
         /// Asigna un tag existente a una imagen existente. Si el tag no existe, saltará una excepción. 
         /// </summary>
         /// <param name="imageId"></param>

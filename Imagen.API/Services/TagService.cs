@@ -42,6 +42,10 @@ namespace Imagen.API.Services
             return _tagRepository.GetAllTags();
         }
 
+        public List<Imagetagconfig> GetAllImageTagConfig()
+        {
+            return _tagRepository.GetAllImageTagConfig();
+        }
         public async Task BatchTagging(AssignTagsRequest request)
         {
             foreach (var r in request.Tags)

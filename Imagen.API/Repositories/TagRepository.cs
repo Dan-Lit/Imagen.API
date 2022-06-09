@@ -26,6 +26,11 @@ namespace Imagen.API.Repositories
             return _dbContext.Tag.ToList<Tag>();
         }
 
+        public List<Imagetagconfig> GetAllImageTagConfig()
+        {
+            return _dbContext.Imagetagconfig.ToList();
+        }
+
         internal async Task AssignTag(Image image, string tagName)
         {
             var imagetagconfig = new Imagetagconfig()
