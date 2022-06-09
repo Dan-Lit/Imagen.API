@@ -46,6 +46,9 @@ namespace Imagen.API.Repositories
 
         public async Task PostImages(List<IFormFile> files)
         {
+            string folderPath = @"C:\Users\danie\source\repos\front-app-image\src\assets\database\";
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
             foreach (var file in files)
             {
                 string id = Guid.NewGuid().ToString();
@@ -110,7 +113,5 @@ namespace Imagen.API.Repositories
             var imageTagConfig = _dbContext.Imagetagconfig.Where(p => p.ImageId == id).ToList();
             return imageTagConfig;
         }
-
-
     }
 }

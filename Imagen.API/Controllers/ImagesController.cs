@@ -81,18 +81,32 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Devuelve las imágenes que no tienen ningún tag asignado. 
+        /// Devuelve en .zip las imágenes que no tienen ningún tag asignado. 
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet]
-        public IActionResult GetUntaggedImages()
+        [HttpGet("zip")]
+        public IActionResult GetUntaggedImagesZip()
         {
-            var path = _imageService.GetUntaggedImages();
+            var path = _imageService.GetUntaggedImagesZip();
             Byte[] b = System.IO.File.ReadAllBytes(path);
             //return File(b, "application/zip");
             return File(b, "application/octet-stream");
+        }
+
+        /// <summary>
+        /// Devuelve en las imágenes que no tienen ningún tag asignado. 
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpGet("untagged")]
+        public IActionResult GetUntaggedImages()
+        {
+            var images = _imageService.GetUntaggedImages();
+            if (images.Count==0) return NotFound();
+            return Ok(images);
         }
 
         ///// <summary>

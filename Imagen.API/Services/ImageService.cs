@@ -68,7 +68,7 @@ namespace Imagen.API.Services
             return await _imageRepository.DeleteImage(id);
         }
 
-        public string GetUntaggedImages()
+        public string GetUntaggedImagesZip()
         {
             var untaggedImages = _imageRepository.GetUntaggedImages();
             if (untaggedImages == null) throw new Exception("204 exception"); //TODO: Exception
@@ -115,6 +115,11 @@ namespace Imagen.API.Services
             byte[] imageByte = Encoding.ASCII.GetBytes(Convert.ToBase64String(File.ReadAllBytes(image.ImageUrl)));
 
             return imageByte;
+        }
+
+        public List<Image> GetUntaggedImages()
+        {
+            return _imageRepository.GetUntaggedImages();
         }
 
         private string BuildZip(List<Image> allImages)
