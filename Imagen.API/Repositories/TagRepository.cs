@@ -21,9 +21,9 @@ namespace Imagen.API.Repositories
             await _dbContext.SaveChangesAsync(); 
         }
 
-        public List<Tag> GetAllTags()
+        public List<string> GetAllTags()
         {
-            return _dbContext.Tag.ToList<Tag>();
+            return _dbContext.Tag.Select(p => p.TagId).ToList();
         }
 
         public List<Imagetagconfig> GetAllImageTagConfig()

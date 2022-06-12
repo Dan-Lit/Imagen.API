@@ -37,7 +37,7 @@ namespace Imagen.API.Services
             await _tagRepository.AssignTag(image, tagName);
         }
 
-        public List<Tag> GetAllTags()
+        public List<string> GetAllTags()
         {
             return _tagRepository.GetAllTags();
         }
