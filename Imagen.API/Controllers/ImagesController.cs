@@ -17,7 +17,7 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene una única foto, según su id. 
+        /// Obtiene una única foto, según su id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Imagen solicitada </returns>
@@ -31,36 +31,11 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene una única foto en base64, según su id. 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Imagen solicitada </returns>
-        [HttpGet("{id}/blob")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetBase64Image(string id)
-        {
-            var images = _imageService.ConvertSingleImageToBase64(id);
-
-            return Ok(images);
-        }
-
-        ///<summary>
-        ///Publica una única foto. 
-        /// </summary>
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> PutImage(IFormFile file)
-        {
-            return await _imageService.PutImage(file);
-        }
-
-        /// <summary>
         /// Publica varias fotos.
-        /// Para programadores: el nombre de los valores de FormData debe ser 'files'.
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
-        [HttpPut("several")]
+        [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> PutImages(List<IFormFile> files)
         {
@@ -81,22 +56,7 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Devuelve en .zip las imágenes que no tienen ningún tag asignado. 
-        /// </summary>
-        /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("zip")]
-        public IActionResult GetUntaggedImagesZip()
-        {
-            var path = _imageService.GetUntaggedImagesZip();
-            Byte[] b = System.IO.File.ReadAllBytes(path);
-            //return File(b, "application/zip");
-            return File(b, "application/octet-stream");
-        }
-
-        /// <summary>
-        /// Devuelve en las imágenes que no tienen ningún tag asignado. 
+        /// Devuelve el id y ruta de las imágenes que no tienen ningún tag asignado. 
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -105,16 +65,17 @@ namespace Imagen.API.Controllers
         public IActionResult GetUntaggedImages()
         {
             var images = _imageService.GetUntaggedImages();
-            if (images.Count==0) return NotFound();
+            if (images.Count==0) return NoContent();
             return Ok(images);
         }
 
-        ///// <summary>
-        /// Devuelve todas las imágenes en .zip. 
+        /// <summary>
+        /// Devuelve todas las imágenes en .zip.
         /// </summary>
         /// <returns>Archivo .zip</returns>
-
-        [HttpGet("GetAllZip")]
+        [HttpGet("GetAll/Zip")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult GetAllImagesZip()
         {
             var path = _imageService.GetAllImagesZip();
@@ -124,10 +85,10 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene todas las imágenes en Blob64
+        /// Obtiene todas las imágenes codificadas en Base64. 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetAll")]
+        [HttpGet("GetAll/Base64")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageResponse))]
         public IActionResult GetAllImages()
         {
@@ -137,7 +98,8 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene todas las imágenes por URL
+        /// Obtiene todas las imágenes por URL.
+        /// Opción más eficiente si alojas tus imágenes en local.
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetAll/url")]
@@ -147,19 +109,6 @@ namespace Imagen.API.Controllers
             var images = _imageService.GetAllImagesByURL();
 
             return Ok(images);
-        }
-
-
-        /// <summary>
-        /// Obtiene los tags asociados a una imagen
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getTags/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetImageTags(string id)
-        {
-            var tag = _imageService.GetImageTags(id);
-            return Ok(tag);
         }
     }
 }

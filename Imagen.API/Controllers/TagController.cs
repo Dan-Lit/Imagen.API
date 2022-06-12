@@ -28,7 +28,7 @@ namespace Imagen.API.Controllers
         }
 
         /// <summary>
-        /// Crea un nuevo tag. 
+        /// Obtiene el nombre de todos los tags creados 
         /// </summary>
         /// <param name="tagName"></param>
         /// <returns></returns>
@@ -46,14 +46,16 @@ namespace Imagen.API.Controllers
         /// <returns></returns>
         [HttpGet("imagetagconfig")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAllImageTagConfig()
         {
             var tags = _tagService.GetAllImageTagConfig();
+            if (tags.Count == 0) return NoContent();
             return Ok(tags);
         }
 
         /// <summary>
-        /// Asigna un tag existente a una imagen existente. Si el tag no existe, saltará una excepción. 
+        /// Asigna un tag existente a una imagen existente. 
         /// </summary>
         /// <param name="imageId"></param>
         /// <param name="tagName"></param>
@@ -66,18 +68,5 @@ namespace Imagen.API.Controllers
             await _tagService.AssignTag(imageId, tagName);
             return Ok();
         }
-
-        /// <summary>
-        /// Asigna tag a varias imágenes. 
-        /// </summary>
-        /// <param name="request"></param>
-        /// 
-        [HttpPost("BatchTagging")]
-        public IActionResult BatchTagging(AssignTagsRequest request)
-        {
-            _tagService.BatchTagging(request); 
-            return Ok();
-        }
-
     }
 }
