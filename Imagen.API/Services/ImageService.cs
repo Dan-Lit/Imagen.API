@@ -13,12 +13,12 @@ namespace Imagen.API.Services
         {
             _imageRepository = imageRepository;
         }
-        //<ImageResponse>
+
         public async Task<string> PutImage(IFormFile file)
         {
            if (!ValidateFile(file))
             {
-                throw new Exception ("File extension not permitted."); //TODO: excepción
+                throw new Exception ("File extension not permitted."); 
             }
 
             return await _imageRepository.PostImage(file);
@@ -28,7 +28,7 @@ namespace Imagen.API.Services
         {
             if (!ValidateFiles(files))
             {
-                throw new Exception("At least one file extension is not permitted."); //TODO: excepción
+                throw new Exception("At least one file extension is not permitted."); 
             }
 
             await _imageRepository.PostImages(files);
@@ -37,7 +37,7 @@ namespace Imagen.API.Services
 
         private bool ValidateFile (IFormFile file)
         {
-            var supportedTypes = new[] { "jpg", "png" };
+            var supportedTypes = new[] { "jpg", "png", "jpeg" };
             var fileExtension = Path.GetExtension(file.FileName).Substring(1);
             if (!supportedTypes.Contains(fileExtension)) 
                 return false;
@@ -46,7 +46,7 @@ namespace Imagen.API.Services
 
         private bool ValidateFiles(List<IFormFile> files)
         {
-            var supportedTypes = new[] { "jpg", "png" };
+            var supportedTypes = new[] { "jpg", "png", "jpeg" };
             foreach (var file in files)
             {
                 var fileExtension = Path.GetExtension(file.FileName).Substring(1);
@@ -59,7 +59,7 @@ namespace Imagen.API.Services
         public Image GetImage(string id)
         {
             var image = _imageRepository.GetImage(id);
-            if (image == null) throw new Exception("Imagen no existe"); //TODO: message exception
+            if (image == null) throw new Exception("Imagen no existe");
             return image;
         }
 
@@ -71,7 +71,7 @@ namespace Imagen.API.Services
         public string GetUntaggedImagesZip()
         {
             var untaggedImages = _imageRepository.GetUntaggedImages();
-            if (untaggedImages == null) throw new Exception("204 exception"); //TODO: Exception
+            if (untaggedImages == null || untaggedImages.Count==0) throw new Exception("204 exception"); 
 
             return BuildZip(untaggedImages);
         }
@@ -81,7 +81,6 @@ namespace Imagen.API.Services
             var allImages = _imageRepository.GetAllImages();
 
             return BuildZip(allImages);
-            //return ImagesToFormData(allImages);
         }
 
         public List<Image> GetAllImagesByURL()

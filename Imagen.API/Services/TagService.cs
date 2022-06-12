@@ -21,7 +21,7 @@ namespace Imagen.API.Services
         public async Task CreateTag(string tagName)
         {
             var tag = _tagRepository.GetAllTags().Where(p => p.Equals(tagName)).ToList();
-            if (tag.Count>0) throw new Exception("El tag ya existe"); //TODO: Message exception 
+            if (tag.Count>0) throw new Exception("El tag ya existe");
 
             await _tagRepository.CreateTag(tagName);
         }
@@ -29,10 +29,10 @@ namespace Imagen.API.Services
         public async Task AssignTag(string imageId, string tagName)
         {
             var image = _imageRepository.GetImage(imageId);
-            if (image == null) throw new Exception("Imagen no encontrada"); //TODO: Message exception
+            if (image == null) throw new Exception("Imagen no encontrada"); 
 
             var tagList = _tagRepository.GetAllTags().Where(p => p.Equals(tagName));
-            if (tagList == null) throw new Exception("El tag no existe"); //TODO: Message exception
+            if (tagList == null) throw new Exception("El tag no existe");
 
             await _tagRepository.AssignTag(image, tagName);
         }
